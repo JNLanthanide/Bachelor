@@ -25,7 +25,6 @@ api.post('/UploadPolicy', (req, res) => {
 
 
 api.get('/GetAccess', (req, res) => {
-	//console.log(req);
 	console.log('Got request')
 	console.log(req.body)
 
