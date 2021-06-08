@@ -12,6 +12,10 @@ api.listen(3000, () => {
 	console.log('API up and running!');
 });
 
+api.get('/', function(req, res) {
+	res.sendFile(__dirname + '/FileExplorer.html');
+  });
+
 api.post('/UploadPolicy', (req, res) => {
 	//console.log(req);
 	console.log('Got request')
@@ -23,14 +27,7 @@ api.post('/UploadPolicy', (req, res) => {
 	})
 });
 
-
-api.get('/GetAccess', (req, res) => {
+api.get('/GrantAccess', (req, res) => {
 	console.log('Got request')
 	console.log(req.body)
-
 });
-
-//api.post('/add', (req, res) => {
-//	console.log(req.body);
-//	res.send('It works!');
-//});

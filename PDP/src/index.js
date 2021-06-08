@@ -20,9 +20,16 @@ api.listen(3001, () => {
 
 api.post('/EvaluatePolicy', (req, res) => {
 	console.log('Got request')
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.withCredentials = false;
 	policyFetcher.GetPolicyStub().then(result => {
+		const Filename = req.query.Filename;
 		if (policyEvaluator.EvaluatePolicy(result, req.body.Request.AccessSubject.Attribute.attributeId) == 'allow') {
-
+			const PEP = req.query.PEP
+			console.log(PEP);
+			xmlHttp.open("POST", `${PEP}/GrantAccess?Filename=${Filename}`);
+			xmlHttp.setRequestHeader("Content-Type", "text/html")
+			xmlHttp.send("Permit");
 		}
 	})
 });

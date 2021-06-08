@@ -5,13 +5,16 @@
     <h2>Authentication</h2>
     <p>Please specify your associated domain:</p>
 
-    <button onclick="redirect()">Hospital</button>
+    <button onclick="redirect('http://127.0.0.1:5501/authentication.html')">Hospital</button>
 
     <script>
-function redirect() {
-  location.replace("http://127.0.0.1:5501/authentication.html?website=http://127.0.0.1:3001/EvaluatePolicy")
+function redirect(domain) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const PEP = urlParams.get('PEP');
+  const Filename = urlParams.get('Filename');
+  const PDP = "http://127.0.0.1:3001"
+  location.replace(`${domain}?PEP=${PEP}&Filename=${Filename}&PDP=${PDP}`)
 }
     </script>
-
 </body>
 </html>

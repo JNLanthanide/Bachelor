@@ -1,3 +1,4 @@
+/*
 const Mam = require('@iota/mam');
 
 const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
@@ -22,12 +23,13 @@ const GetPolicy = async root => {
         await Mam.fetch(root, mode, sideKey, logData);
         console.log(`Verify with MAM Explorer:\n${mamExplorerLink}${root}\n`);
 }
+*/
 
 const GetPolicyStub = async () => {
   return 1;
 }
 
-exports.GetPolicy = GetPolicy;
+//exports.GetPolicy = GetPolicy;
 exports.GetPolicyStub = GetPolicyStub;
 
 /*
