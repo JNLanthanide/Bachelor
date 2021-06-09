@@ -29,7 +29,6 @@ function validate() {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.withCredentials = false;
         xmlHttp.open("POST", Website)
-        //xmlHttp.setRequestHeader("Access-Control-Allow-Origin", website)
         xmlHttp.setRequestHeader("Content-Type", "application/json")
         xmlHttp.send(JSON.stringify(userAttributes));
     }

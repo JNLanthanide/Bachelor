@@ -1,12 +1,13 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-var cors = require('cors')
-var policyFetcher = require('./PolicyFetcher')
-var policyEvaluator = require('./PolicyEvaluator')
+const cors = require('cors')
+const http = require('http')
+const policyFetcher = require('./PolicyFetcher')
+const policyEvaluator = require('./PolicyEvaluator');
+const { json } = require('express');
 
 const api = express();
 //api.use(express.static(__dirname + '/public'));
-api.use(bodyParser.json());
+api.use(json());
 
 api.use(cors());
 
@@ -20,16 +21,38 @@ api.listen(3001, () => {
 
 api.post('/EvaluatePolicy', (req, res) => {
 	console.log('Got request')
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.withCredentials = false;
 	policyFetcher.GetPolicyStub().then(result => {
 		const Filename = req.query.Filename;
 		if (policyEvaluator.EvaluatePolicy(result, req.body.Request.AccessSubject.Attribute.attributeId) == 'allow') {
 			const PEP = req.query.PEP
 			console.log(PEP);
-			xmlHttp.open("POST", `${PEP}/GrantAccess?Filename=${Filename}`);
-			xmlHttp.setRequestHeader("Content-Type", "text/html")
-			xmlHttp.send("Permit");
+			const data = JSON.stringify({
+				decision: 'Permit'
+			});
+
+			const options = {
+				hostname: PEP,
+				port: 3000,
+				path: '/GrantAccess',
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  'Content-Length': data.length
+				}}
+
+			const permitReq = http.request(options, res => {
+				console.log(`statusCode: ${res.statusCode}`)
+			
+				res.on('data', d => {
+				process.stdout.write(d)
+				})})
+			
+			permitReq.on('error', error => {
+				console.error(error)
+			})
+			
+			permitReq.write(data)
+			permitReq.end()
 		}
 	})
 });
