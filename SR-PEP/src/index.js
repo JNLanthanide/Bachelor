@@ -1,22 +1,22 @@
 const express = require('express');
-const TanglePoster = require('./IOTA/TanglePoster.js')
 const { json } = require('express');
+const TangleInteractor = require('./IOTA/TangleInteractor.js');
 const api = express();
 
+var accessToken = "";
 api.use(json());
-api.listen(3000, () => {
+api.listen(3002, () => {
 	console.log('API up and running!');
 });
 
 api.get('/', function(req, res) {
 	res.sendFile(__dirname + '/FileExplorer.html');
-  });
+});
 
 api.post('/UploadPolicy', (req, res) => {
-	//console.log(req);
 	console.log('Got request')
 	console.log(req.body)
-	TanglePoster.publish(req.body).then(result => {
+	TangleInteractor.publish(req.body).then(result => {
 		res.send(result)
 	}).catch(err => {
 		res.send(error)
@@ -28,6 +28,8 @@ api.post('/GrantAccess', (req, res) => {
 	console.log(req.body)
 	if (req.body.decision == 'Permit') {
 		console.log("Permission Granted")
+		const Filename = req.body.filename;
+		TangleInteractor.CreateGrantAccessToken(Filename);
 	}
 	else {
 		console.log("Permission Denied")

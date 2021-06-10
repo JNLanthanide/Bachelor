@@ -27,7 +27,8 @@ api.post('/EvaluatePolicy', (req, res) => {
 			const PEP = req.query.PEP
 			console.log(PEP);
 			const data = JSON.stringify({
-				decision: 'Permit'
+				decision: 'Permit',
+				filename: Filename
 			});
 
 			const options = {
