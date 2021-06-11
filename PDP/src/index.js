@@ -19,11 +19,23 @@ api.listen(3001, () => {
 	console.log('API up and running!');
 });
 
+api.post('/PostPolicy', function(req, res) {
+	try {
+		policyFetcher.UpdatePolicyRoot(req.body.policyRoot)
+		res.send('Root Updated')
+	}
+	catch(err) {
+		res.send('Could not update policy root: ' + err);
+	}
+});
+
+
+
 api.post('/EvaluatePolicy', (req, res) => {
-	console.log('Got request')
-	policyFetcher.GetPolicyStub().then(result => {
+	console.log('Got Evaluate Policy request')
+	policyFetcher.Fetchpolicy().then(policy => {
 		const Filename = req.query.Filename;
-		if (policyEvaluator.EvaluatePolicy(result, req.body.Request.AccessSubject.Attribute.attributeId) == 'allow') {
+		if (policyEvaluator.EvaluatePolicy(policy, req.body.Request.AccessSubject.Attribute.attributeId) == 'Permit') {
 			const PEP = req.query.PEP
 			console.log(PEP);
 			const data = JSON.stringify({
@@ -55,5 +67,5 @@ api.post('/EvaluatePolicy', (req, res) => {
 			permitReq.write(data)
 			permitReq.end()
 		}
-	})
+	})	
 });

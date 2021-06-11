@@ -9,9 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@iota/client": "^0.6.1",
     "@iota/converter": "^1.0.0-beta.30",
     "@iota/mam": "^0.7.3",
+    "body-parser": "^1.19.0",
+    "body-parser-xml": "^2.0.3",
+    "cors": "^2.8.5",
+    "errorhandler": "^1.5.1",
     "express": "^4.17.1",
-    "iota.crypto.js": "^0.4.2"
+    "iota.crypto.js": "^0.4.2",
+    "mime": "^2.5.2",
+    "xmlhttprequest": "^1.8.0"
   }
 }

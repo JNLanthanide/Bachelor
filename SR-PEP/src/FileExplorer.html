@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script type="text/javascript" src="ResourceHandler.js" ></script>    
+</head>
 <body>
-
     <h2>Authentication</h2>
-    <p>Please specify which resource you wish to access:</p>
-
-    <button onclick="requestResource('HeartJournal.txt')">Bob's heart journal</button>
-
-    <script>
-function requestResource(filename) {
-    const PDP = "http://127.0.0.1:3001"
-    const PEP = "127.0.0.1"
-    location.replace(`${PDP}?PEP=${PEP}&Filename=${filename}`)
-}
-    </script>
+    <p>Please specify which resource you wish to access:</p><br>
+    <p>Bob's Heart Journal</p>
+    <button onclick="requestResource('HeartJournal.txt')">Request Access</button>
+    <button onclick="accessResource('HeartJournal.txt')">Access</button>
 </body>
 </html>

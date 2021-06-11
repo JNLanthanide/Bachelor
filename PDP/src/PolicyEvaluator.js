@@ -1,4 +1,5 @@
-const EvaluatePolicy = (policy, attributes) => {
-    return "allow";
+module.exports = {
+    EvaluatePolicy: (policy, attributes) => {
+        return "Permit";
+    }
 }
-exports.EvaluatePolicy = EvaluatePolicy;
