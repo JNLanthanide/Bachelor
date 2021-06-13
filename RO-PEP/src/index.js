@@ -5,7 +5,6 @@ const TangleInteractor = require('./IOTA/TangleInteractor.js');
 const TokenHandler = require('./TokenHandler')
 const bodyParser = require('body-parser');
 var path = require('path');
-var mime = require('mime');
 var fs = require('fs');
 
 
@@ -131,15 +130,6 @@ api.post('/SendToken', (req, res) => {
 		console.log('Token could not be stored ' + err);
 	}
 });
-
-function streamToString (stream) {
-	const chunks = [];
-	return new Promise((resolve, reject) => {
-	  stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-	  stream.on('error', (err) => reject(err));
-	  stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-	})
-  }
 
 api.post('/GetAccessToken', (req,res) => {
 	console.log('Get access token request')

@@ -1,6 +1,5 @@
 const Mam = require('@iota/mam');
-const Iota = require('@iota/core');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+const { asciiToTrytes } = require('@iota/converter');
 const { ClientBuilder } = require('@iota/client')
 const CryptoJS = require("crypto-js");
 
@@ -8,10 +7,6 @@ const mode = 'restricted';
 const sideKey = 'VERYSECRETKEY';
 const provider = 'https://nodes.devnet.iota.org';
 const tokenKey = 'VERYSECRETKEY2'
-
-const iota = Iota.composeAPI({
-  provider: 'https://nodes.devnet.iota.org'
-  });
 
 const client = new ClientBuilder()
   .node('https://api.lb-0.testnet.chrysalis2.com')
@@ -73,8 +68,7 @@ module.exports = {
     return message.root;
   },
 
-  fetch: async () => {
-    const result = await Mam.fetch(policyRoot, mode, sideKey);
-    result.messages.forEach(message => console.log('Fetched and parsed', JSON.parse(trytesToAscii(message)), '\n'))
+  fetch: async root => { // Included for testing
+    return await Mam.fetch(root, mode, sideKey);
   }
 }

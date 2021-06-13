@@ -16,10 +16,6 @@ let mamState = Mam.init(provider);
 mamState = Mam.changeMode(mamState, mode, sideKey);
 
 module.exports = {
-    GetPolicyStub: async () => {
-      return 1;
-    },
-
     UpdatePolicyRoot: root => {
       policyRoot = root;
     },
