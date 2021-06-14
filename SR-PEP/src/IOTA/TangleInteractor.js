@@ -1,6 +1,5 @@
 const Mam = require('@iota/mam');
-const Iota = require('@iota/core');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+const { asciiToTrytes } = require('@iota/converter');
 const { ClientBuilder } = require('@iota/client')
 const CryptoJS = require("crypto-js");
 
@@ -8,10 +7,6 @@ const mode = 'restricted';
 const sideKey = 'VERYSECRETKEY';
 const provider = 'https://nodes.devnet.iota.org';
 const tokenKey = 'VERYSECRETKEY2'
-
-const iota = Iota.composeAPI({
-  provider: 'https://nodes.devnet.iota.org'
-  });
 
 const client = new ClientBuilder()
   .node('https://api.lb-0.testnet.chrysalis2.com')
@@ -34,6 +29,7 @@ function hex2a(hexx) {
 }
 
 module.exports = {
+  // Create message with encrypted filename in indexation payload
   CreateGrantAccessToken: async filename => {
     const ciphertext = CryptoJS.AES.encrypt(filename, tokenKey).toString();
     const token = await client.message()
@@ -43,6 +39,7 @@ module.exports = {
     return token.messageId;
   },
 
+  // Get access token, decrypt it and check whether filename is equal to request file
   VerifyGrantAccessToken: async (filename, messageId) => {
     const getToken = await client.getMessage().data(messageId);
     const tokenDataHex = getToken.message.payload.data
@@ -53,6 +50,7 @@ module.exports = {
     else return false;
   },
 
+  // Publish package to MAM channel
   publish: async packet => {
     // Create MAM message as a string of trytes
     const trytes = asciiToTrytes(JSON.stringify(packet));
@@ -73,8 +71,7 @@ module.exports = {
     return message.root;
   },
 
-  fetch: async () => {
-    const result = await Mam.fetch(policyRoot, mode, sideKey);
-    result.messages.forEach(message => console.log('Fetched and parsed', JSON.parse(trytesToAscii(message)), '\n'))
+  fetch: async root => { // Included for testing
+    return await Mam.fetch(root, mode, sideKey);
   }
 }

@@ -1,13 +1,12 @@
-//var AttributeCreator = require('./AttributeCreator')
+// Helper function for GeneratePolicyRequest
 function createAttribute(attributeId, value) {
 	return { AttributeId: attributeId, Value: value };
-
 }
 
+// Generates an object to be JSON serialized for PDP request
 function GeneratePolicyRequest() {
     var jsonRequest = new Object();
     jsonRequest.Request = new Object();
-    //jsonRequest.Request.ReturnPolicyIdList = true;
     jsonRequest.Request.AccessSubject = new Object();
     jsonRequest.Request.AccessSubject.Attribute = [];
     jsonRequest.Request.AccessSubject.Attribute.push(createAttribute("user.location", "Chicago"));
@@ -15,6 +14,7 @@ function GeneratePolicyRequest() {
     return jsonRequest;
 }
 
+// Authenticates and sends user attributes to PDP
 function validate() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;

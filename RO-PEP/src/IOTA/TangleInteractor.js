@@ -29,6 +29,7 @@ function hex2a(hexx) {
 }
 
 module.exports = {
+  // Create message with encrypted filename in indexation payload
   CreateGrantAccessToken: async filename => {
     const ciphertext = CryptoJS.AES.encrypt(filename, tokenKey).toString();
     const token = await client.message()
@@ -38,6 +39,7 @@ module.exports = {
     return token.messageId;
   },
 
+  // Get access token, decrypt it and check whether filename is equal to request file
   VerifyGrantAccessToken: async (filename, messageId) => {
     const getToken = await client.getMessage().data(messageId);
     const tokenDataHex = getToken.message.payload.data
@@ -48,6 +50,7 @@ module.exports = {
     else return false;
   },
 
+  // Publish package to MAM channel
   publish: async packet => {
     // Create MAM message as a string of trytes
     const trytes = asciiToTrytes(JSON.stringify(packet));

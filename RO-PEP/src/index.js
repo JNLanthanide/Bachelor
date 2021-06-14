@@ -38,6 +38,7 @@ api.get('/', function(req, res) {
 	res.sendFile(__dirname + '/FileExplorer.html');
 });
 
+// Upload a policy and send root to PDP
 api.post('/UploadPolicy', (req, res) => {
 	console.log('UploadPolicy Request')
 	TangleInteractor.publish({
@@ -75,6 +76,7 @@ api.post('/UploadPolicy', (req, res) => {
 	})
 });
 
+// Create access token and send to SR-PEP
 api.post('/GrantAccess', (req, res) => {
 	console.log('Got request')
 	console.log(req.body)
@@ -121,6 +123,7 @@ api.post('/GrantAccess', (req, res) => {
 });
 
 
+// Receive and store access token
 api.post('/SendToken', (req, res) => {
 	try {
 		TokenHandler.StoreToken(req.body);
@@ -131,6 +134,8 @@ api.post('/SendToken', (req, res) => {
 	}
 });
 
+
+// Find access token and send get access request to RO-PEP containing messageId of token. Wait for response, as stream and save it.
 api.post('/GetAccessToken', (req,res) => {
 	console.log('Get access token request')
 	const filename = req.text
@@ -142,20 +147,19 @@ api.post('/GetAccessToken', (req,res) => {
 			path: `/GetAccess?filename=${filename}&messageId=${messageId}`,
 			method: 'GET'
 		}
-		const getAccessReq = http.request(options, res => {
-				const chunks = [];
-
-				stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-				stream.on('error', (err) => reject(err));
-				stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-			  
-				fs.writeFile(__dirname + '/files/HeartJournal.txt', chunks, function(err) {
-					if(err) {
-						return console.log(err);
-					}
-					console.log("The file was saved!");
-			}); 
-			
+		const getAccessReq = http.request(options, stream => {
+				var writeStream = fs.createWriteStream(filename);
+				writeStream.once('open', function(fd) {
+					//var file = '';
+					stream.on('data',function(data){
+						//file += data.toString();
+						writeStream.write(data)
+						});
+					
+					stream.on('end',function(){
+						writeStream.end();
+					});
+				});
 		})
 		getAccessReq.end()
 	}
@@ -165,6 +169,7 @@ api.post('/GetAccessToken', (req,res) => {
 	
 })
 
+// Verify access token, if true, then stream file to RO-PEP.
 api.get('/GetAccess', (req,res) => {
 	if (TangleInteractor.VerifyGrantAccessToken(req.query.filename, req.query.messageId)) {
 		var file = __dirname + '/files/HeartJournal.txt';
